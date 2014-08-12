@@ -1,0 +1,38 @@
+#!/bin/bash
+clear
+if [ ! -f $1.ssl_enc ] || [ -z $1 ]
+    then
+	echo ""
+	echo "------------------------------------------------------------------------"
+	echo ""
+	echo $"	     Error: file \"$1\" does not exist or is wrong file type"
+	echo ""
+	echo "------------------------------------------------------------------------"
+	echo ""
+	exit 1 
+fi
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+echo "               Decrypting $1.ssl_enc into $1.tar.gz"
+echo "     [using openssl aes-256-cbc -d -a -in $1.ssl_enc -out $1.tar.gz]"
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+
+openssl aes-256-cbc -d -a -in $1.ssl_enc -out $1.tar.gz
+
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+echo "                  Successfully decrypted $1.ssl_enc"
+echo "              decompressing [using tar -xvzf $1.tar.gz $1]" 
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+
+tar -xvzf $1.tar.gz $1 
+
+echo ""
+echo "cleaning ..."
+rm $1.tar.gz

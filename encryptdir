@@ -1,0 +1,46 @@
+#!/bin/bash
+clear
+if [ ! -d $1 ] || [ -z $1 ] ;
+    then
+	echo ""
+	echo "------------------------------------------------------------------------"
+	echo ""
+	echo $"		    Error: Directory \"$1\" does not exist"
+	echo ""
+	echo "------------------------------------------------------------------------"
+	echo ""
+	exit 1 
+fi
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+echo "    Compressing $1 to $1.tar.gz [using: tar -cvzf $1.tar.gz $1]"
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+echo "Compressing..."
+echo ""
+
+tar -cvzf $1.tar.gz $1
+
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+echo $"                      Compression Successfull!" 
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+echo "                  Encrypting $1.tar.gz to $1.ssl_enc"
+echo "   [using: openssl aes-256-cbc -a -salt -in $1.tar.gz -out $1.ssl_enc"
+echo ""
+echo "------------------------------------------------------------------------"
+echo ""
+
+openssl aes-256-cbc -a -salt -in $1.tar.gz -out $1.ssl_enc
+echo ""
+echo "Cleaning..."
+rm $1.tar.gz
