@@ -19,12 +19,13 @@ if [ ! -e $filename.ssl_enc ] ;
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
-    echo $"	     Error: file \"$filename.ssl_enc\" does not exist or is wrong file type"
+    echo " Error: file \"$filename.ssl_enc\" does not exist or is wrong file type"
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
     exit 1; 
 fi
+
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
