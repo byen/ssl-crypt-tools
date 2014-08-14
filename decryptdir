@@ -1,18 +1,29 @@
 #!/bin/bash
 
-if [ -z $1 ] || [ -n $2 ] ;
+filename=$1
+
+echo $filename
+echo $2
+
+if [ ! $filename ] || [ $2 ] ;
   then
-    echo "Usage: decryptdir <dir-name(without .ssl_enc)>"
+    echo "Usage: decryptdir <encrypted filename>"
     exit 1;
 fi
 
+echo "$1" | grep -q ".\+\.ssl_enc"
+if [ $? -eq 0 ] ;
+  then
+    filename=(${1//./ });
+fi
+
 clear
-if [ ! -f $1.ssl_enc ] || [ -z $1 ]
+if [ ! -e $filename.ssl_enc ] ;
   then
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
-    echo $"	     Error: file \"$1\" does not exist or is wrong file type"
+    echo $"	     Error: file \"$filename.ssl_enc\" does not exist or is wrong file type"
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
@@ -21,25 +32,25 @@ fi
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
-echo "               Decrypting $1.ssl_enc into $1.tar.gz"
-echo "     [using openssl aes-256-cbc -d -a -in $1.ssl_enc -out $1.tar.gz]"
+echo "               Decrypting $filename.ssl_enc into $filename.tar.gz"
+echo "     [using openssl aes-256-cbc -d -a -in $filename.ssl_enc -out $filename.tar.gz]"
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
 
-openssl aes-256-cbc -d -a -in $1.ssl_enc -out $1.tar.gz
+openssl aes-256-cbc -d -a -in $filename.ssl_enc -out $filename.tar.gz
 
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
-echo "                  Successfully decrypted $1.ssl_enc"
-echo "              decompressing [using tar -xvzf $1.tar.gz $1]" 
+echo "                  Successfully decrypted $filename.ssl_enc"
+echo "              decompressing [using tar -xvzf $filename.tar.gz $filename]" 
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
 
-tar -xvzf $1.tar.gz $1 
+tar -xvzf $filename.tar.gz $filename 
 
 echo ""
 echo "cleaning ..."
-rm $1.tar.gz
+rm $filename.tar.gz

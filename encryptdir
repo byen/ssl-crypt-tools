@@ -7,12 +7,12 @@ if [ -z $1 ] || [ -n $2 ] ;
 fi
 
 clear
-if [ ! -d $1 ] || [ -z $1 ] ;
+if [ ! -d $1 ] ;
   then
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
-    echo $"	hellow   Error: Directory \"$1\" does not exist"
+    echo "	        Error: Directory \"$1\" does not exist"
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
