@@ -1,6 +1,6 @@
 #!/bin/bash
 
-if [ -z $1 ] || [ -n $2 ] ;
+if [ -z $1 ] || [ $# -ne 1 ] ;
   then
     echo "Usage: encryptdir <dir-name>"
     exit 1;
@@ -33,7 +33,7 @@ tar -cvzf $1.tar.gz $1
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
-echo $"                      Compression Successfull!" 
+echo "                      Compression Successfull!" 
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
