@@ -13,13 +13,15 @@ if [ $? -eq 0 ] ;
     filename=(${1//./ });
 fi
 
+sslname="$filename.ssl_enc"
+tarname="$filename.tar.gz"
 clear
-if [ ! -e $filename.ssl_enc ] ;
+if [ ! -e $sslname ] ;
   then
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
-    echo " Error: file \"$filename.ssl_enc\" does not exist or is wrong file type"
+    echo " Error: file \"$sslname\" does not exist or is wrong file type"
     echo ""
     echo "------------------------------------------------------------------------"
     echo ""
@@ -29,25 +31,25 @@ fi
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
-echo "               Decrypting $filename.ssl_enc into $filename.tar.gz"
-echo "     [using openssl aes-256-cbc -d -a -in $filename.ssl_enc -out $filename.tar.gz]"
+echo "               Decrypting $sslname into $tarname"
+echo "     [using openssl aes-256-cbc -d -a -in $sslname -out $tarname]"
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
 
-openssl aes-256-cbc -d -a -in $filename.ssl_enc -out $filename.tar.gz
+openssl aes-256-cbc -d -a -in $sslname -out $tarname
 
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
-echo "                  Successfully decrypted $filename.ssl_enc"
-echo "              decompressing [using tar -xvzf $filename.tar.gz $filename]" 
+echo "                  Successfully decrypted $sslname"
+echo "              decompressing [using tar -xvzf $tarname $filename]" 
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
 
-tar -xvzf $filename.tar.gz $filename 
+tar -xvzf $tarname $filename 
 
 echo ""
 echo "cleaning ..."
-rm $filename.tar.gz
+rm $tarname 

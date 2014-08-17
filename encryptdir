@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ -z $1 ] || [ $# -ne 1 ] ;
+if [ $# -ne 1 ];
   then
-    echo "Usage: encryptdir <dir-name>"
+    echo "Usage: encryptdir <dir-name to encrypt(no \"/\")>"
     exit 1;
 fi
 
@@ -28,26 +28,29 @@ echo ""
 echo "Compressing..."
 echo ""
 
-tar -cvzf $1.tar.gz $1
+set +e
+tarname="$1.tar.gz"
+tar -cvzf $tarname $1
 
+if [ $? -eq 2 ]; 
+  then
+    clear
+    echo "tar has encountered an error"
+    exit 1;
+fi
+set -e
+
+sslname="$1.ssl_enc"
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
-echo "                      Compression Successfull!" 
+echo "                  Encrypting $tarname to $sslname"
+echo "   [using: openssl aes-256-cbc -a -salt -in $tarname -out $sslname"
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
 
-echo ""
-echo "------------------------------------------------------------------------"
-echo ""
-echo "                  Encrypting $1.tar.gz to $1.ssl_enc"
-echo "   [using: openssl aes-256-cbc -a -salt -in $1.tar.gz -out $1.ssl_enc"
-echo ""
-echo "------------------------------------------------------------------------"
-echo ""
-
-openssl aes-256-cbc -a -salt -in $1.tar.gz -out $1.ssl_enc
+openssl aes-256-cbc -a -salt -in $tarname -out $sslname
 echo ""
 echo "Cleaning..."
-rm $1.tar.gz
+rm $tarname 
