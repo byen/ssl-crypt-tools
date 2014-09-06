@@ -2,11 +2,10 @@
 
 if [ $# -ne 1 ];
   then
-    echo "Usage: encryptdir <dir-name to encrypt(no \"/\")>"
+    echo "Usage: encryptdir <dir-name to encrypt>"
     exit 1;
 fi
 
-clear
 if [ ! -d $1 ] ;
   then
     echo ""
@@ -18,6 +17,14 @@ if [ ! -d $1 ] ;
     echo ""
     exit 1; 
 fi
+
+lastChar="${1##${1%%?}}"
+if [ "$lastChar" = "/" ] ;
+  then
+    echo "Please do not include \"/\" at the end of folder name"
+    exit 1;
+fi
+
 echo ""
 echo "------------------------------------------------------------------------"
 echo ""
@@ -34,7 +41,6 @@ tar -cvzf $tarname $1
 
 if [ $? -eq 2 ]; 
   then
-    clear
     echo "tar has encountered an error"
     exit 1;
 fi
