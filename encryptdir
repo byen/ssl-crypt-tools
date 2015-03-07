@@ -1,20 +1,19 @@
 #!/bin/bash
 
-if [ $# -ne 1 ];
-  then
-    echo "Usage: encryptdir <dir-name to encrypt>"
+usage(){
+    echo "Usage: encryptdir [dir-name to encrypt]"
     exit 1;
+}
+
+if [ $# -gt 2 ] || [ $# -eq 0 ];
+  then
+    usage
 fi
 
 if [ ! -d $1 ] ;
   then
-    echo ""
-    echo "------------------------------------------------------------------------"
-    echo ""
-    echo "	        Error: Directory \"$1\" does not exist"
-    echo ""
-    echo "------------------------------------------------------------------------"
-    echo ""
+    echo "Error: Directory \"$1\" does not exist"
+    usage
     exit 1; 
 fi
 
@@ -25,38 +24,29 @@ if [ "$lastChar" = "/" ] ;
     exit 1;
 fi
 
-echo ""
-echo "------------------------------------------------------------------------"
-echo ""
-echo "    Compressing $1 to $1.tar.gz [using: tar -cvzf $1.tar.gz $1]"
-echo ""
-echo "------------------------------------------------------------------------"
-echo ""
-echo "Compressing..."
-echo ""
-
+foldername=$1
 set +e
 tarname="$1.tar.gz"
-tar -cvzf $tarname $1
-
-if [ $? -eq 2 ]; 
+tar -czf $tarname $1
+if [ $? -ne 0 ] ; 
   then
-    echo "tar has encountered an error"
+     echo "ERROR: could not compress \"$tarname\""
+    exit 1;
+fi
+
+sslname="$1.ssl_enc"
+openssl aes-256-cbc -a -salt -in $tarname -out $sslname
+if [ $? -ne 0 ] ; 
+  then
+    echo "ERROR: could not encrypt \"$sslname\""
+    rm $tarname
     exit 1;
 fi
 set -e
 
-sslname="$1.ssl_enc"
-echo ""
-echo "------------------------------------------------------------------------"
-echo ""
-echo "                  Encrypting $tarname to $sslname"
-echo "   [using: openssl aes-256-cbc -a -salt -in $tarname -out $sslname"
-echo ""
-echo "------------------------------------------------------------------------"
-echo ""
+if [ -a $sslname ] ;
+  then
+    rm -rf $foldername
+fi
 
-openssl aes-256-cbc -a -salt -in $tarname -out $sslname
-echo ""
-echo "Cleaning..."
 rm $tarname 
