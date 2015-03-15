@@ -17,6 +17,12 @@ if [ ! -d $1 ] ;
     exit 1; 
 fi
 
+if [ $1 == "." ] ;
+  then
+    echo "a set can't be a member of itself (no dot)"
+    exit 1;
+fi
+
 lastChar="${1##${1%%?}}"
 if [ "$lastChar" = "/" ] ;
   then
